@@ -1,36 +1,23 @@
 <?php
-    $arquivo = "savana.png";
-    // $arquivo = "./assets/imagens/savana.jpg";
-    // $arquivo = "./assets/imagens/savana.png";
     
-    $width =  200;
-    $height = 200;
+    $img_original = './assets/imagens/savana.png';
+    $logomarca = './assets/imagens/mini_savana.png';
 
-    list($width_original, $height_original) = getimagesize($arquivo);
+    list($largura_original, $altura_original) = getimagesize($img_original);
+    list($largura_mini, $altura_mini)= getimagesize($logomarca);
 
-    $ratio = $width_original / $height_original;
+    $new_image = imagecreatetruecolor($largura_original, $altura_original);
+    $marca_img = imagecreatetruecolor($largura_mini, $altura_mini);
 
-    if($width/$height > $ratio){
-        $width = $height * $ratio;
-    }else{
-        $height = $width / $ratio;
-    }
-    
-    // echo "Altura ".$height." Largura ".$width;
-    $new_img = imagecreatetruecolor($width, $height);
+    $original = imagecreatefrompng($img_original);
+    $img_mini = imagecreatefrompng($logomarca);
 
-    // $img_original = imagecreatefromjpeg($arquivo);
-    $img_original = imagecreatefrompng($arquivo);
+    imagecopy($new_image, $original, 0, 0, 0, 0, $largura_original, $altura_original);
+    imagecopy($new_image, $img_mini, $largura_original-$largura_mini, $altura_original-$altura_mini
+                                                                    , 0, 0, $largura_mini, $altura_mini);
 
-    // var_dump($img_original);
-    imagecopyresampled($new_img, $img_original, 0, 0, 0, 0, $width, $height, $width_original, $height_original);
-    
-    // header("Content-Type: image/jpeg");
-    // $test = imagejpeg($new_img, null, 90);
-    // header("Content-Type: image/png");
-    imagepng($new_img, "./assets/imagens/mini_savana.png");
-
-    echo "Imagem redimensionada com sucesso";
+    header("Content-type: image/png");
+    imagepng($new_image, null);
 
  ?>
 
